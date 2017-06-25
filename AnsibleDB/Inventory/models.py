@@ -28,7 +28,7 @@ class Group(models.Model):
     roles = models.ManyToManyField(Role, blank=True)
     isPlatform = models.BooleanField()
     enabled = models.BooleanField(default=False)
-    variables = models.ManyToManyField(Var)
+    variables = models.OneToManyField(Var)
 
     def __str__(self):
         return self.name
