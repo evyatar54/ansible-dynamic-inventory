@@ -15,40 +15,62 @@ def create_host(hostname, groupname):
         group = Group.objects.get(name=groupname)
         host = Host.objects.create(name=hostname)
         host.groups.add(group)
+        return True
     except KeyError:
-        raise ("Host already exists")
-    except:
-        raise ("internal error occurred")
+        raise ("Host already exists Or Group doesn't exist")
+    except Exception as e:
+        #raise ("internal error occurred")
+        raise e.args
 
 def delete_host(hostname):
-    Host.objects.remove(name=hostname)
-
+    try:
+        Host.objects.remove(name=hostname)
+        return True
+    except KeyError:
+        raise ("Host doesn't exist")
+    except :
+        raise ("internal error occurred")
 
 def remove_host_from_group(hostname, groupname):
-    host = Host.objects.get(name=hostname)
-    #TODO
-#    host.remove(groups=groupname)
-## checking if the host has more group left , theres no such thing as host without groups
+    try:
+        host = Host.objects.get(name=hostname)
+        numOfGroups = host.groups.count()
+        if (numOfGroups < 2):
+            return False
+            raise ("Host cannot be left without groups")
+        else:
+            host.groups.remove(name=groupname)
+            return True
 
+    except KeyError:
+        raise ("Host or group doesn't exist")
+    except:
+        raise ("internal error occurred")
 
 def add_host_to_group(hostname, groupname):
     try:
         host = Host.objects.get(name=hostname)
         group = Group.objects.get(name=groupname)
-        host.groups.add(groupname)
+        host.groups.create(group)
+        return True
+    except KeyError:
+        raise ("Host already in this group Or Host or group doesn't exist")
     except:
-        raise ("Host doesn't exist")
-
+        raise ("internal error occurred")
 
 def get_all_hosts_by_group(groupname):
-    #TODO
-    pass
+    try:
+        group = Group.objects.get(name=groupname)
+        return (group.host_set.all())
 
+    except KeyError:
+        raise ("Group doesn't exist")
+    except:
+        raise ("internal error occurred")
 
 # Group
 def get_all_groups():
     return (Group.objects.Filter(enables=True))
-
 
 def create_group(groupname):
     try:
