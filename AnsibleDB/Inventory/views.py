@@ -1,34 +1,34 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import *
-from django.core.serializers.json import DjangoJSONEncoder
+from django.http import HttpRequest
+from django.http import JsonResponse
 
 from collections import namedtuple
 
 from django.shortcuts import render
 from .utils import *
 
-Response = namedtuple("Response", ["success","message","data"])
+Response = namedtuple("Response", ["success", "message", "data"])
 
 # Create your views here.
 def createHost(request):
-    host_name = ""
-    group_name = ""
-    response = Response(success="False", message="",data="")
+    response = Response(success="False", message="", data="")
     try:
         if request.method == "GET":
             host_name = request.GET.hostname
             group_name = request.GET.groupname
-    except ValueError as e:
 
-    try:
-        utils.createHost(host_name, group_name)
-        response["success"]="True"
-        response["message"]="The host " + host_name + " was created successfully and added to group " + group_name
-    except ValueError as e:
-        response[message]=e.strerror
+            try:
+                utils.createHost(host_name, group_name)
+                response["success"] = "True"
+                response["message"] = "The host " + host_name + " was created successfully and added to group " + group_name
+            except ValueError as e:
+                response[message] = e.strerror
+    except ValueError:
+        response["message"] = "not a GET request"
 
     return JsonResponse(response)
+
 
 def deleteHost(request):
     host_name = ""
@@ -47,6 +47,7 @@ def deleteHost(request):
         response[message]=e.strerror
 
     return JsonResponse(response)
+
 
 def addHostToGroup(request):
     host_name = ""
@@ -68,6 +69,7 @@ def addHostToGroup(request):
 
     return JsonResponse(response)
 
+
 def removeHostFromGroup(request):
     host_name = ""
     group_name = ""
@@ -87,6 +89,7 @@ def removeHostFromGroup(request):
         response[message]=e.strerror
 
     return JsonResponse(response)
+
 
 def getAllHostsByGroup(request):
     group_name = ""
@@ -109,6 +112,7 @@ def getAllHostsByGroup(request):
 
     return JsonResponse(response)
 
+
 def getAllGroups(request):
     all_groups = ()
     try:
@@ -121,8 +125,9 @@ def getAllGroups(request):
 
     return JsonResponse(response)
 
-def createGroup(request):
 
+def createGroup(request):
+    group_name = ""
     response = Response(success="False", message="",data="")
     try:
         if request.method == 'GET':
@@ -131,10 +136,27 @@ def createGroup(request):
         raise ("not a GET request")
 
     try:
-        all_groups = utils.getAllGroups()
+        all_groups = utils.createGroup(group_name)
         response["success"]="True"
-        response["message"]="got all groups successfully"
-        response["data"]=all_groups
+        response["message"]="created group " + group_name + " successfully"
+    except ValueError as e:
+        response[message]=e.strerror
+
+    return JsonResponse(response)
+
+def deleteGroup(request):
+    group_name = ""
+    response = Response(success="False", message="",data="")
+    try:
+        if request.method == 'GET':
+            group_name = request.GET.groupname
+    except ValueError as e:
+        raise ("not a GET request")
+
+    try:
+        all_groups = utils.deleteGroup(group_name)
+        response["success"]="True"
+        response["message"]="deleted group " + group_name + " successfully"
     except ValueError as e:
         response[message]=e.strerror
 
