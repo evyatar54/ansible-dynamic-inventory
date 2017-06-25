@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="81a32e00-9dbf-467b-85e5-b14ff43bb81a" name="Default" comment="">
+    <list default="true" id="81a32e00-9dbf-467b-85e5-b14ff43bb81a" name="Default" comment="enviorments bla bla">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AnsibleDB/AnsibleDB/environment.py" afterPath="$PROJECT_DIR$/AnsibleDB/AnsibleDB/environment.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AnsibleDB/AnsibleDB/settings.py" afterPath="$PROJECT_DIR$/AnsibleDB/AnsibleDB/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AnsibleDB/Inventory/models.py" afterPath="$PROJECT_DIR$/AnsibleDB/Inventory/models.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,7 +17,7 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AnsibleDB/Inventory/models.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="731">
@@ -28,6 +25,16 @@
               <folding>
                 <element signature="e#24#63#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="environment.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/AnsibleDB/AnsibleDB/environment.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="6" column="1" lean-forward="true" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -136,6 +143,14 @@
       <option name="presentableId" value="Default" />
       <updated>1498378725617</updated>
     </task>
+    <task id="LOCAL-00001" summary="enviorments bla bla">
+      <created>1498390532608</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1498390532608</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -164,6 +179,10 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="enviorments bla bla" />
+    <option name="LAST_COMMIT_MESSAGE" value="enviorments bla bla" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
@@ -184,14 +203,6 @@
           <folding>
             <element signature="e#24#63#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AnsibleDB/AnsibleDB/environment.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="1" lean-forward="true" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -218,6 +229,14 @@
           <folding>
             <element signature="e#24#63#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AnsibleDB/AnsibleDB/environment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="1" lean-forward="true" selection-start-line="6" selection-start-column="1" selection-end-line="6" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
