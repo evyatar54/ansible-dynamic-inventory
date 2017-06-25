@@ -1,9 +1,5 @@
  # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
-from django.db import models
-
-# Create your models here.
 from django.db import models
 
 
@@ -13,6 +9,7 @@ class Role(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True, primary_key=True)
@@ -24,6 +21,7 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Var(models.Model):
     group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
