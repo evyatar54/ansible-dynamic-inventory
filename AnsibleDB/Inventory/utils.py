@@ -75,9 +75,9 @@ def addGroupToGroup(hostname, groupname):
         host = Host.objects.get_or_create(name=hostname)
         group = Group.objects.get(name=groupname)
         host.groups.add(groupname)
-        
-        
-        
+
+
+
     >> > entry = Entry.objects.get(pk=1)
     >> > cheese_blog = Blog.objects.get(name="Cheddar Talk")
     >> > entry.blog = cheese_blog
@@ -90,8 +90,8 @@ def addGroupToGroup(hostname, groupname):
 
 def getAllGroupsByGroup(groupname):
     #TODO
-    
-    
+
+
 # OSs
 def getAllOSs():
     return (OS.objects.all())
