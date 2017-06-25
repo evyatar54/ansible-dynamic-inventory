@@ -4,7 +4,7 @@ from django.db import models
 
 
 class Role(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, primary_key=True)
     enabled = models.BooleanField(default=False)
 
     def __str__(self):
