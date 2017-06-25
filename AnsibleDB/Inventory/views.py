@@ -24,11 +24,11 @@ def createHost(request):
     try:
         utils.createHost(host_name, group_name)
         response["success"]="True"
-        response["message"]="The host " + host_name + " added successfully"
+        response["message"]="The host " + host_name + " was created successfully and added to group " + group_name
     except ValueError as e:
         response[message]=e.strerror
 
-    return HttpResponse(response)
+    return JsonResponse(response)
 
 def deleteHost(request):
     host_name = ""
@@ -46,4 +46,96 @@ def deleteHost(request):
     except ValueError as e:
         response[message]=e.strerror
 
-    return HttpResponse(response)
+    return JsonResponse(response)
+
+def addHostToGroup(request):
+    host_name = ""
+    group_name = ""
+    response = Response(success="False", message="",data="")
+    try:
+        if request.method == 'GET':
+            host_name = request.GET.hostname
+            group_name = request.GET.groupname
+    except ValueError as e:
+        raise ("not a GET request")
+
+    try:
+        utils.addHostToGroup(host_name, group_name)
+        response["success"]="True"
+        response["message"]="The host " + host_name + " was added successfully to group " + group_name
+    except ValueError as e:
+        response[message]=e.strerror
+
+    return JsonResponse(response)
+
+def removeHostFromGroup(request):
+    host_name = ""
+    group_name = ""
+    response = Response(success="False", message="",data="")
+    try:
+        if request.method == 'GET':
+            host_name = request.GET.hostname
+            group_name = request.GET.groupname
+    except ValueError as e:
+        raise ("not a GET request")
+
+    try:
+        utils.removeHostFromGroup(host_name, group_name)
+        response["success"]="True"
+        response["message"]="The host " + host_name + " was removed successfully from group " + group_name
+    except ValueError as e:
+        response[message]=e.strerror
+
+    return JsonResponse(response)
+
+def getAllHostsByGroup(request):
+    group_name = ""
+
+    response = Response(success="False", message="",data="")
+    try:
+        if request.method == 'GET':
+            host_name = request.GET.hostname
+            group_name = request.GET.groupname
+    except ValueError as e:
+        raise ("not a GET request")
+
+    try:
+        all_hosts = utils.getAllHostsByGroup(group_name)
+        response["success"]="True"
+        response["message"]="got hosts successfully for group" + group_name
+        response["data"]=all_hosts
+    except ValueError as e:
+        response[message]=e.strerror
+
+    return JsonResponse(response)
+
+def getAllGroups(request):
+    all_groups = ()
+    try:
+        all_groups = utils.getAllGroups()
+        response["success"]="True"
+        response["message"]="got all groups successfully"
+        response["data"]=all_groups
+    except ValueError as e:
+        response[message]=e.strerror
+
+    return JsonResponse(response)
+
+def createGroup(request):
+
+    response = Response(success="False", message="",data="")
+    try:
+        if request.method == 'GET':
+            group_name = request.GET.groupname
+    except ValueError as e:
+        raise ("not a GET request")
+
+    try:
+        all_groups = utils.getAllGroups()
+        response["success"]="True"
+        response["message"]="got all groups successfully"
+        response["data"]=all_groups
+    except ValueError as e:
+        response[message]=e.strerror
+
+    return JsonResponse(response)
