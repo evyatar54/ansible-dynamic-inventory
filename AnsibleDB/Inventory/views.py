@@ -17,20 +17,20 @@ Response = namedtuple("Response", ["success", "message", "data"])
 def createHost(request):
     response = Response(success="False", message="", data={})
     try:
-        host_name = request.GET.hostname
-        group_name = request.GET.groupname
+        host_name = request.GET['hostname']
+        group_name = request.GET['groupname']
 
         utils.create_host(host_name, group_name)
-        response.success = "True"
-        response.message = "The host " + host_name + " was created successfully and added to group " + group_name
+        message_str = "The host " + host_name + " was created successfully and added to group " + group_name
+        response = Response(success="True", message=message_str, data={})
     except AttributeError:
-        response.message = "hostname and groupname required in HTTP request"
+        response = Response(success="False", message="hostname and groupname required in HTTP request", data={})
     except Exception as e:
-        response.message = e.args
+        response = Response(success="False", message=e.args, data={})
 
-    return JsonResponse(response)
+    return JsonResponse(response._asdict())
 
-"""
+
 def deleteHost(request):
     host_name = ""
     response = Response(success="False", message="",data="")
@@ -161,5 +161,4 @@ def deleteGroup(request):
         response[message]=e.strerror
 
     return JsonResponse(response)
-"""
 
