@@ -130,24 +130,33 @@ def addGroupToGroup(hostname, groupname):
     >> > from blog.models import Author
     >> > joe = Author.objects.create(name="Joe")
     >> > entry.authors.add(joe)
-
-
-def getAllGroupsByGroup(groupname):
-    #TODO
-    
-    
 # OSs
 def getAllOSs():
     return (OS.objects.all())
 """
 
+def getAllGroupsByGroup(groupname):
+    try:
+        return (Group.objects.get(name=groupname).groups)
+    except:
+        raise ("internal error occurred")
+
 # Vars
 def get_all_vars_by_group(groupname):
-    return (Group.objects.Filter(name=groupname).variables)
+    try:
+        if (Group.objects.get(name=groupname)):
+            return Var.objects.filter(group=groupname)
+        else:
+            return False
+    except:
+        raise ("internal error occurred")
 
 # Roles
 def get_all_roles():
-    return (Role.objects.Filter(enabled=True))
+    try:
+        return (Role.objects.Filter(enabled=True))
+    except:
+        raise ("internal error occurred")
 
 def create_role(rolename):
     try:
