@@ -1,7 +1,7 @@
 DB = {
-    "host": "13.80.9.157",
+    "host": "ansb-db.postgres.database.azure.com",
     "port": "5432",
-    "dbName": "postgres",
+    "name": "ansb_inventory",
     "username": "dbuser",
-    "password": "",
+    "password": "P@ssw0rd123456",
 }

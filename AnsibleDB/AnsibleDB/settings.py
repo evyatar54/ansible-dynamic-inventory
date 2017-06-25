@@ -74,10 +74,16 @@ WSGI_APPLICATION = 'AnsibleDB.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+
+from .environment import DB
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME'      : DB.name,
+        'USER'      : DB.user,
+        'PASSWORD'  : DB.password,
+        'HOST'      : DB.hostname,
+        'PORT'      : DB.port,
     }
 }
 
