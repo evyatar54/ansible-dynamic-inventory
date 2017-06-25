@@ -1,24 +1,24 @@
 from Inventory.models import Group,Host,Role,Var
 from . import models
 from logging import getLogger
-from configparser import ConfigParser
+
+logger = getLogger()
+class remove_role_exception(Exception):
+    pass
+
 # Host
-#cp = ConfigParser.
-#logger = getLogger()
-
-
 def get_all_hosts():
     return models.Host.objects.all()
-
 
 def create_host(hostname, groupname):
     try:
         group = Group.objects.get(name=groupname)
         host = Host.objects.create(name=hostname)
         host.groups.add(group)
-    except:
+    except KeyError:
         raise ("Host already exists")
-
+    except:
+        raise ("internal error occurred")
 
 def delete_host(hostname):
     Host.objects.remove(name=hostname)
@@ -97,68 +97,88 @@ def getAllOSs():
     return (OS.objects.all())
 """
 
-
 # Vars
 def get_all_vars_by_group(groupname):
     return (Group.objects.Filter(name=groupname).variables)
-
 
 # Roles
 def get_all_roles():
     return (Role.objects.Filter(enabled=True))
 
-
 def create_role(rolename):
     try:
         Role.objects.create(name=rolename, enabled=True)
+        return True
     except KeyError:
         raise ("Role already exists")
+    except:
+        raise ("internal error occurred")
+
+def delete_role(rolename):
+    #TODO - removing the option for roles per host
+    try:
+        hostsList = Host.objects.all()
+        groupList = Group.objects.all()
+
+        for host in hostsList:
+            remove_role_from_host(rolename,host)
+
+        for group in groupList:
+            remove_role_from_group(rolename,group)
+
+        Role.objects.remove(name=rolename)
+        return True
+
+    except KeyError:
+        raise ("Role doesn't exist")
+    except remove_role_exception as e:
+        raise e
     except:
         raise ("internal error occurred")
 
 def add_role_to_host(rolename, hostname):
     try:
         host = Host.objects.get(name=hostname)
-        #role = Role.object.create(name=rolename, enabled=True)
         role = Role.object.get(name=rolename)
         host.roles.add(role)
+        return True
+    except KeyError:
+        raise ("Host or role doesn't exist")
     except:
-        raise ("Host doesn't exist")
-        raise ("Role doesn't exist")
-        raise ("DB error")
-
+        raise ("internal error occurred")
 
 def add_role_to_group(rolename, groupname):
     try:
         group = Group.objects.get(name=groupname)
         role = Role.object.get(name=rolename)
         group.roles.add(role)
+        return True
     except KeyError:
         raise ("Group or role doesn't exist")
     except:
         raise ("internal error occurred")
 
-
 def remove_role_from_host(rolename, hostname):
-    host = Host.objects.get(name=hostname)
-    my_roles = host.roles.all()
-    if rolename in my_roles:
-        try:
+    try:
+        host = Host.objects.get(name=hostname)
+        my_roles = host.roles.all()
+        if rolename in my_roles:
             host.roles.remove(role=rolename)
-        except:
-            raise ("internal error occurred")
-    else:
-        raise ("Host doesn't contain that role")
-
+            return True
+        else:
+            raise remove_role_exception("Host doesn't contain that role")
+    except:
+        raise ("internal error occurred")
 
 def remove_role_from_group(rolename, groupname):
     try:
         group = Host.objects.get(name=groupname)
         my_roles = group.roles.all()
         if rolename in my_roles:
-            try:
-                group.roles.remove(role=rolename)
-            except:
-                raise ("internal error occurred")
+            group.roles.remove(role=rolename)
+            return True
         else:
-            raise ("Group doesn't contain that role")
+            raise remove_role_exception("Group doesn't contain that role")
+
+    except:
+        raise ("internal error occurred")
