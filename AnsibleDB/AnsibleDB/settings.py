@@ -79,11 +79,11 @@ from .environment import DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME'      : DB.name,
-        'USER'      : DB.user,
-        'PASSWORD'  : DB.password,
-        'HOST'      : DB.hostname,
-        'PORT'      : DB.port,
+        'NAME'      : DB["name"],
+        'USER'      : DB["username"],
+        'PASSWORD'  : DB["password"],
+        'HOST'      : DB["host"],
+        'PORT'      : DB["port"],
     }
 }
 
