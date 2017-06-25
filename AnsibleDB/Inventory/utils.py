@@ -104,18 +104,24 @@ def createRole(rolename):
 def addRoleToHost(rolename, hostname):
     try:
         host = Host.objects.get(name=hostname)
-        role = Role.object.create(name=rolename, enabled=True)
+        #role = Role.object.create(name=rolename, enabled=True)
+        role = Role.object.get(name=rolename)
         host.roles.add(role)
     except:
         raise ("Host doesn't exist")
+        raise ("Role doesn't exist")
+        raise ("DB error")
 
 def addRoleToGroup(rolename, groupname):
     try:
         group = Group.objects.get(name=groupname)
-        role = Role.object.create(name=rolename, enabled=True)
+        #role = Role.object.create(name=rolename, enabled=True)
+        role = Role.object.get(name=rolename)
         group.roles.add(role)
     except:
         raise ("Group doesn't exist")
+        raise ("Role doesn't exist")
+        raise ("DB error")
 
 def removeRoleFromHost(rolename, hostname):
     try:
