@@ -13,9 +13,8 @@ Response = namedtuple("Response", ["success", "message", "data"])
 
 
 # Create your views here.
-@require_http_methods(["GET"])
-def createHost(request):
-    response = Response(success="False", message="", data={})
+@require_http_methods(["POST"])
+def create_host(request):
     try:
         host_name = request.GET['hostname']
         group_name = request.GET['groupname']
