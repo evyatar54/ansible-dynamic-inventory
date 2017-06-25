@@ -1,18 +1,10 @@
-# -*- coding: utf-8 -*-
+ # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
 from django.db import models
 
 # Create your models here.
 from django.db import models
-
-
-class Var(models.Model):
-    key = models.CharField(max_length=255)
-    value = models.CharField(max_length=255)
-
-    def __str__(self):
-        return '{} : {}'.format(self.key, self.value)
 
 
 class Role(models.Model):
@@ -23,18 +15,27 @@ class Role(models.Model):
         return self.name
 
 class Group(models.Model):
-    name = models.CharField(max_length=255, unique=True)
-    groups = models.ManyToManyField('self')
+    name = models.CharField(max_length=255, unique=True, primary_key=True)
+    groups = models.ManyToManyField('self', blank=True)
     roles = models.ManyToManyField(Role, blank=True)
-    isPlatform = models.BooleanField()
+    isPlatform = models.BooleanField(default=False)
     enabled = models.BooleanField(default=False)
-    variables = models.OneToManyField(Var)
+
 
     def __str__(self):
         return self.name
 
+class Var(models.Model):
+    group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
+    key = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+
+    def __str__(self):
+        return '{} : {}'.format(self.key, self.value)
+
+
 class Host(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, primary_key=True)
     groups = models.ManyToManyField(Group)
     roles = models.ManyToManyField(Role, blank=True)
 

@@ -1,12 +1,16 @@
-from .models import *;
+from .models import *
 
+# Host
 def getAllHosts():
-        return (Host.objects.all());
+        return (Host.objects.all())
 
-def createHost(hostname, groupname ):
-    host = Host.objects.create(name=hostname)
-    group = Group.objects.get(name=groupname)
-    host.add(group)
+def createHost(hostname, groupname):
+    try:
+        group = Group.objects.get(name=groupname)
+        host = Host.objects.create(name=hostname)
+        host.groups.add(group)
+    except:
+        raise ("Host already exist")
 
 def deleteHost(hostname):
     Host.objects.remove(name=hostname)
@@ -18,13 +22,27 @@ def removeHostFromGroup(hostname, groupname):
 ## checking if the host has more group left , theres no such thing as host without groups
 
 def addHostToGroup(hostname, groupname):
-    host = Host.objects.get_or_create(name=hostname)
-    group = Group.objects.get(name=groupname)
-    host.groups.add(groupname)
+    try:
+        host = Host.objects.get(name=hostname)
+        group = Group.objects.get(name=groupname)
+        host.groups.add(groupname)
+    except:
+        raise ("Host doesn't exist")
+
+def getAllHostsByGroup(groupname):
+    #TODO
+    pass
+
+# Group
+def getAllGroups():
+    return (Group.objects.Filter(enables=True))
 
 def createGroup(groupname):
-    group = Group.objects.create(name=groupname)
-    group.add(group)
+    try:
+        group = Group.objects.create(name=groupname)
+        group.add(group)
+    except:
+            raise ("Group already exist")
 
 def deleteGroup(groupname):
     Group.objects.remove(name=groupname)
@@ -54,10 +72,59 @@ def addGroupToGroup(hostname, groupname):
     >> > from blog.models import Author
     >> > joe = Author.objects.create(name="Joe")
     >> > entry.authors.add(joe)
-#def getAllGroups():
 
 
-#def getAllOSs():
+def getAllGroupsByGroup(groupname):
+    #TODO
+    
+    
+# OSs
+def getAllOSs():
+    return (OS.objects.all())
+"""
 
+# Vars
+def getAllVarsByGroup(groupname):
+    return (Group.objects.Filter(name=groupname).variables)
 
-#def getAllRoles():"""
+# Roles
+def getAllRoles():
+    return (Role.objects.Filter(enabled=True))
+
+def createRole(rolename):
+    try:
+        Role.objects.create(name=rolename, enabled=True)
+    except:
+        raise ("Role already exist")
+
+def addRoleToHost(rolename, hostname):
+    try:
+        host = Host.objects.get(name=hostname)
+        role = Role.object.create(name=rolename, enabled=True)
+        host.roles.add(role)
+    except:
+        raise ("Host doesn't exist")
+
+def addRoleToGroup(rolename, groupname):
+    try:
+        group = Group.objects.get(name=groupname)
+        role = Role.object.create(name=rolename, enabled=True)
+        group.roles.add(role)
+    except:
+        raise ("Group doesn't exist")
+
+def removeRoleFromHost(rolename, hostname):
+    try:
+        host = Host.objects.get(name=hostname)
+        host.roles.remove(role=rolename)
+        #TODO
+    except:
+        raise ("Host doesn't exist")
+
+def removeRoleFromGroup(rolename, groupname):
+    try:
+        group = Host.objects.get(name=groupname)
+        group.roles.remove(role=rolename)
+        #TODO
+    except:
+        raise ("Group doesn't exist")
