@@ -159,6 +159,6 @@ def remove_role_from_group(rolename, groupname):
             try:
                 group.roles.remove(role=rolename)
             except:
-                raise "internal error occurred"
+                raise ("internal error occurred")
         else:
-            raise "Group doesn't contain that role"
+            raise ("Group doesn't contain that role")
