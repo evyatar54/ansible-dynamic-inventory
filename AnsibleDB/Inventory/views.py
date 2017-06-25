@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.http import HttpRequest
 from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
 
 from collections import namedtuple
 
@@ -11,25 +12,24 @@ from .utils import *
 Response = namedtuple("Response", ["success", "message", "data"])
 
 # Create your views here.
+@require_http_methods(["GET"])
 def createHost(request):
-    response = Response(success="False", message="", data="")
+    response = Response(success="False", message="", data={})
     try:
-        if request.method == "GET":
-            host_name = request.GET.hostname
-            group_name = request.GET.groupname
+        host_name = request.GET.hostname
+        group_name = request.GET.groupname
 
-            try:
-                utils.createHost(host_name, group_name)
-                response["success"] = "True"
-                response["message"] = "The host " + host_name + " was created successfully and added to group " + group_name
-            except ValueError as e:
-                response[message] = e.strerror
-    except ValueError:
-        response["message"] = "not a GET request"
+        utils.create_host(host_name, group_name)
+        response["success"] = "True"
+        response["message"] = "The host " + host_name + " was created successfully and added to group " + group_name
+    except KeyError as e:
+        response[message] = e.strerror
+    except:
+        response[message] = e.strerror
 
     return JsonResponse(response)
 
-
+"""
 def deleteHost(request):
     host_name = ""
     response = Response(success="False", message="",data="")
@@ -97,7 +97,6 @@ def getAllHostsByGroup(request):
     response = Response(success="False", message="",data="")
     try:
         if request.method == 'GET':
-            host_name = request.GET.hostname
             group_name = request.GET.groupname
     except ValueError as e:
         raise ("not a GET request")
@@ -114,7 +113,7 @@ def getAllHostsByGroup(request):
 
 
 def getAllGroups(request):
-    all_groups = ()
+
     try:
         all_groups = utils.getAllGroups()
         response["success"]="True"
@@ -161,3 +160,5 @@ def deleteGroup(request):
         response[message]=e.strerror
 
     return JsonResponse(response)
+"""
+

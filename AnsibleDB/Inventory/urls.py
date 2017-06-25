@@ -6,5 +6,5 @@ from AnsibleDB.Inventory import views
 
 urlpatterns = [
     url(r'^createHost/', views.createHost),
-    url(r'^removeHost/')
+
 ]
