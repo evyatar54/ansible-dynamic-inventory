@@ -1,6 +1,10 @@
 from .models import *
-
+from logging import getLogger
+from configparser import ConfigParser
 # Host
+
+#cp = ConfigParser.
+#logger = getLogger()
 def getAllHosts():
         return (Host.objects.all())
 
@@ -10,7 +14,7 @@ def createHost(hostname, groupname):
         host = Host.objects.create(name=hostname)
         host.groups.add(group)
     except:
-        raise ("Host already exist")
+        raise ("Host already exists")
 
 def deleteHost(hostname):
     Host.objects.remove(name=hostname)
@@ -42,7 +46,7 @@ def createGroup(groupname):
         group = Group.objects.create(name=groupname)
         group.add(group)
     except:
-            raise ("Group already exist")
+            raise ("Group already exists")
 
 def deleteGroup(groupname):
     Group.objects.remove(name=groupname)
@@ -95,28 +99,35 @@ def createRole(rolename):
     try:
         Role.objects.create(name=rolename, enabled=True)
     except:
-        raise ("Role already exist")
+        raise ("Role already exists")
 
 def addRoleToHost(rolename, hostname):
     try:
         host = Host.objects.get(name=hostname)
-        role = Role.object.create(name=rolename, enabled=True)
+        #role = Role.object.create(name=rolename, enabled=True)
+        role = Role.object.get(name=rolename)
         host.roles.add(role)
     except:
         raise ("Host doesn't exist")
+        raise ("Role doesn't exist")
+        raise ("DB error")
 
 def addRoleToGroup(rolename, groupname):
     try:
         group = Group.objects.get(name=groupname)
-        role = Role.object.create(name=rolename, enabled=True)
+        #role = Role.object.create(name=rolename, enabled=True)
+        role = Role.object.get(name=rolename)
         group.roles.add(role)
     except:
         raise ("Group doesn't exist")
+        raise ("Role doesn't exist")
+        raise ("DB error")
 
 def removeRoleFromHost(rolename, hostname):
     try:
         host = Host.objects.get(name=hostname)
         host.roles.remove(role=rolename)
+
         #TODO
     except:
         raise ("Host doesn't exist")
