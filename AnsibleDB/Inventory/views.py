@@ -7,9 +7,10 @@ from django.views.decorators.http import require_http_methods
 from collections import namedtuple
 
 from django.shortcuts import render
-from .utils import *
+from . import utils
 
 Response = namedtuple("Response", ["success", "message", "data"])
+
 
 # Create your views here.
 @require_http_methods(["GET"])
@@ -20,12 +21,12 @@ def createHost(request):
         group_name = request.GET.groupname
 
         utils.create_host(host_name, group_name)
-        response["success"] = "True"
-        response["message"] = "The host " + host_name + " was created successfully and added to group " + group_name
-    except KeyError as e:
-        response[message] = e.strerror
-    except:
-        response[message] = e.strerror
+        response.success = "True"
+        response.message = "The host " + host_name + " was created successfully and added to group " + group_name
+    except AttributeError:
+        response.message = "hostname and groupname required in HTTP request"
+    except Exception as e:
+        response.message = e.args
 
     return JsonResponse(response)
 

@@ -2,7 +2,7 @@
 
 from django.conf.urls import url, include
 from django.contrib import admin
-from AnsibleDB.Inventory import views
+from . import views
 
 urlpatterns = [
     url(r'^createHost/', views.createHost),
