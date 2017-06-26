@@ -1,4 +1,4 @@
-from Inventory.models import Group,Host,Role
+from .models import Group,Host,Role
 from . import models
 from django.core.exceptions import ObjectDoesNotExist
 from logging import getLogger
