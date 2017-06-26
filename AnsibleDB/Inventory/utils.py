@@ -1,4 +1,4 @@
-from Inventory.models import Group,Host,Role,Var
+from Inventory.models import Group,Host,Role
 from . import models
 from django.core.exceptions import ObjectDoesNotExist
 from logging import getLogger
@@ -19,11 +19,11 @@ def create_host(hostname, groupname):
     try:
         group = Group.objects.get(name=groupname)
         if Host.objects.get(name=hostname):
-            return False   
             raise ("Host already exists ")
         else:
             host = Host.objects.create(name=hostname)
             host.groups.add(group)
+            host.save()
             return True
         
     except ObjectDoesNotExist:
@@ -46,7 +46,6 @@ def remove_host_from_group(hostname, groupname):
         host = Host.objects.get(name=hostname)
         numOfGroups = host.groups.count()
         if (numOfGroups < 2):
-            return False
             raise ("Host cannot be left without groups")
         else:
             host.groups.remove(name=groupname)
@@ -97,6 +96,8 @@ def create_group(groupname):
     try:
         group = Group.objects.create(name=groupname)
         group.add(group)
+        group.save()
+
     except IntegrityError:
             raise ("Group already exists")
     except :
@@ -146,7 +147,7 @@ def getAllGroupsByGroup(groupname):
         return (Group.objects.get(name=groupname).groups)
     except:
         raise ("internal error occurred")
-
+"""
 # Vars
 def get_all_vars_by_group(groupname):
     try:
@@ -156,7 +157,7 @@ def get_all_vars_by_group(groupname):
             return False
     except:
         raise ("internal error occurred")
-
+"""
 # Roles
 def get_all_roles():
     try:
@@ -200,6 +201,7 @@ def add_role_to_host(rolename, hostname):
         host = Host.objects.get(name=hostname)
         role = Role.object.get(name=rolename)
         host.roles.add(role)
+        host.save()
         return True
     except ObjectDoesNotExist:
         raise ("Host or role doesn't exist")
@@ -213,6 +215,7 @@ def add_role_to_group(rolename, groupname):
         group = Group.objects.get(name=groupname)
         role = Role.objects.get(name=rolename)
         group.roles.add(role)
+        group.save()
 
         return True
     except ObjectDoesNotExist:
