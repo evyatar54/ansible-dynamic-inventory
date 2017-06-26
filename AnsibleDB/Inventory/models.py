@@ -4,7 +4,9 @@ from django.db import models
 
 from datetime import datetime
 
+
 class Role(models.Model):
+    id = models.BigIntegerField(primary_key=True)
     name = models.CharField(max_length=255, unique=True, primary_key=True)
     enabled = models.BooleanField(default=True)
 
@@ -52,8 +54,3 @@ class Host(models.Model):
 
     def __str__(self):
         return self.name
-
-
-
-
-
