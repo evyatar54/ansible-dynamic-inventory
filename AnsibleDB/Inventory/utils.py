@@ -203,17 +203,22 @@ def add_role_to_host(rolename, hostname):
         return True
     except ObjectDoesNotExist:
         raise ("Host or role doesn't exist")
+    except IntegrityError :
+        raise ("Role already in this host")
     except:
         raise ("internal error occurred")
 
 def add_role_to_group(rolename, groupname):
     try:
         group = Group.objects.get(name=groupname)
-        role = Role.object.get(name=rolename)
+        role = Role.objects.get(name=rolename)
         group.roles.add(role)
+
         return True
     except ObjectDoesNotExist:
         raise ("Group or role doesn't exist")
+    except IntegrityError :
+        raise ("Role already in this group")
     except:
         raise ("internal error occurred")
 
@@ -238,6 +243,5 @@ def remove_role_from_group(rolename, groupname):
             return True
         else:
             raise remove_role_exception("Group doesn't contain that role")
-
     except:
         raise ("internal error occurred")

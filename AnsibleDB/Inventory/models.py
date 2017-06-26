@@ -6,7 +6,7 @@ from datetime import datetime
 
 class Role(models.Model):
     name = models.CharField(max_length=255, unique=True, primary_key=True)
-    enabled = models.BooleanField(default=False)
+    enabled = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -17,7 +17,7 @@ class Group(models.Model):
     groups = models.ManyToManyField('self', symmetrical=False, blank=True)
     roles = models.ManyToManyField(Role, blank=True)
     isPlatform = models.BooleanField(default=False)
-    enabled = models.BooleanField(default=False)
+    enabled = models.BooleanField(default=True)
 
     def __str__(self):
         return '{} {}'.format(self.name, self.get_string())
