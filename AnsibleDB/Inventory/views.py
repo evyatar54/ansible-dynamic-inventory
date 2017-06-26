@@ -91,73 +91,52 @@ def removeHostFromGroup(request):
     return JsonResponse(response)
 
 
+@require_http_methods(["GET"])
 def getAllHostsByGroup(request):
-    group_name = ""
-
-    response = Response(success="False", message="",data="")
     try:
-        if request.method == 'GET':
-            group_name = request.GET.groupname
-    except ValueError as e:
-        raise ("not a GET request")
-
-    try:
-        all_hosts = utils.getAllHostsByGroup(group_name)
-        response["success"]="True"
-        response["message"]="got hosts successfully for group" + group_name
-        response["data"]=all_hosts
-    except ValueError as e:
-        response[message]=e.strerror
-
+        groupname = request.GET['name']
+        all_group_hosts = utils.get_all_hosts_by_group(groupname)
+        response = Response(success="True",
+                            message="got all '%s' group's successfully" % groupname,
+                            data=all_group_hosts)
+    except KeyError as e:
+        response = Response(success="False", message="missing argument: 'name'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
     return JsonResponse(response)
 
 
-def getAllGroups(request):
-
+@require_http_methods(["GET"])
+def get_all_groups(request):
     try:
-        all_groups = utils.getAllGroups()
-        response["success"]="True"
-        response["message"]="got all groups successfully"
-        response["data"]=all_groups
-    except ValueError as e:
-        response[message]=e.strerror
-
+        all_groups = utils.get_all_groups()
+        response = Response(success="True", message="got all groups successfully", data=all_groups)
+    except Exception as e:
+        response = Response(success="True", message=e.__str__(), data={})
     return JsonResponse(response)
 
-
-def createGroup(request):
-    group_name = ""
-    response = Response(success="False", message="",data="")
+@require_http_methods(["POST"])
+def create_group(request):
     try:
-        if request.method == 'GET':
-            group_name = request.GET.groupname
-    except ValueError as e:
-        raise ("not a GET request")
-
-    try:
-        all_groups = utils.createGroup(group_name)
-        response["success"]="True"
-        response["message"]="created group " + group_name + " successfully"
-    except ValueError as e:
-        response[message]=e.strerror
-
+        groupname = request.POST['name']
+        utils.create_group(groupname)
+        response = Response(success="True", message="group '%s' created successfully" % groupname, data={})
+    except KeyError as e:
+        response = Response(success="False", message="missing argument: 'name'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
     return JsonResponse(response)
 
+@require_http_methods(["POST"])
 def deleteGroup(request):
-    group_name = ""
-    response = Response(success="False", message="",data="")
     try:
-        if request.method == 'GET':
-            group_name = request.GET.groupname
-    except ValueError as e:
-        raise ("not a GET request")
-
-    try:
-        all_groups = utils.deleteGroup(group_name)
-        response["success"]="True"
-        response["message"]="deleted group " + group_name + " successfully"
-    except ValueError as e:
-        response[message]=e.strerror
+        groupname = request.POST['name']
+        all_groups = utils.deleteGroup(groupname)
+        response = Response(success="True", message="group '%s' deleted successfully" % groupname, data={})
+    except KeyError as e:
+        response = Response(success="False", message="missing argument: 'name'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
 
     return JsonResponse(response)
 
