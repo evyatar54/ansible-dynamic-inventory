@@ -30,7 +30,7 @@ def create_host(hostname, group_name):
             host.groups.add(group)
             host.save()
             return True
-        
+
     except ObjectDoesNotExist:
         raise "Group doesn't exist"
     except Exception as e:
@@ -195,16 +195,8 @@ def create_role(role_name):
 def delete_role(role_name):
     # TODO: - removing the option for roles per host
     try:
-        hosts_list = Host.objects.all()
-        group_list = Group.objects.all()
-
-        for host in hosts_list:
-            remove_role_from_host(role_name,host)
-
-        for group in group_list:
-            remove_role_from_group(role_name,group)
-
-        Role.objects.remove(name=role_name)
+        role = Role.object.get(name=role_name)
+        role.delete()
         return True
 
     except ObjectDoesNotExist:
@@ -236,7 +228,6 @@ def add_role_to_group(role_name, group_name):
         role = Role.objects.get(name=role_name)
         group.roles.add(role)
         group.save()
-
         return True
     except ObjectDoesNotExist:
         raise "Group or role doesn't exist"
@@ -249,24 +240,18 @@ def add_role_to_group(role_name, group_name):
 def remove_role_from_host(role_name, hostname):
     try:
         host = Host.objects.get(name=hostname)
-        my_roles = host.roles.all()
-        if role_name in my_roles:
-            host.roles.remove(role=role_name)
-            return True
-        else:
-            raise RemoveRoleException("Host doesn't contain that role")
-    except:
-        raise "internal error occurred"
+        role = Role.objects.get(name=role_name)
+        host.roles.remove(role)
+        return True
+    except ObjectDoesNotExist:
+        raise "host or role doesnt exist"
 
 
 def remove_role_from_group(role_name, group_name):
     try:
-        group = Host.objects.get(name=group_name)
-        my_roles = group.roles.all()
-        if role_name in my_roles:
-            group.roles.remove(role=role_name)
-            return True
-        else:
-            raise RemoveRoleException("Group doesn't contain that role")
-    except:
-        raise "internal error occurred"
+        group = Group.objects.get(name=group_name)
+        role = Role.objects.get(name=role_name)
+        group.roles.remove(role)
+        return True
+    except ObjectDoesNotExist:
+        raise "group or role doesnt exist"
