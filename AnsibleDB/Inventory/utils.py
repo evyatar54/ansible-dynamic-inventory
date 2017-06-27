@@ -1,4 +1,4 @@
-from .models import Group, Host, Role
+from .models import Group, Host, Role, Var
 from django.core.exceptions import ObjectDoesNotExist
 from logging import getLogger
 from django.db import IntegrityError
@@ -6,10 +6,6 @@ from django.template.loader import render_to_string
 
 INVENTORY_TEMPLATE_PATH = "inventory/inventory.j2"
 logger = getLogger()
-
-
-class RemoveRoleException(Exception):
-    pass
 
 
 # Host
@@ -26,9 +22,16 @@ def get_host(hostname):
 def get_all_hosts():
     try:
         return Host.objects.all()
-
     except:
         raise Exception('internal error occurred')
+
+
+def get_host_roles(hostname):
+    try:
+        host = get_host(hostname)
+        return host.roles.all()
+    except ObjectDoesNotExist:
+        raise Exception('host doesnt exist')
 
 
 def create_host(hostname, group_name):
@@ -155,14 +158,34 @@ def addGroupToGroup(hostname, group_name):
     >> > entry.authors.add(joe)
 
 
-def getAllGroupsByGroup(group_name):
-    #TODO
-
-
 # OSs
 def getAllOSs():
     return (OS.objects.all())
 """
+
+
+def add_group_to_group(group_name, child_group_name):
+    try:
+        group = get_group(group_name)
+        group_child = get_group(child_group_name)
+        group.children.add(group_child)
+        return True
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception("internal error occurred")
+
+
+def remove_group_child(group_name, child_group_name):
+    try:
+        group = get_group(group_name)
+        group_child = get_group(child_group_name)
+        group.children.remove(group_child)
+        return True
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception("internal error occurred")
 
 
 def get_group(group_name):
@@ -183,18 +206,49 @@ def get_group_children(group_name):
         raise Exception('group doesnt exist')
     except:
         raise Exception('internal error occurred')
-"""
+
+
 # Vars
-def get_all_vars_by_group(groupname):
+def add_var_to_group(key, value, group_name):
     try:
-        if (Group.objects.get(name=groupname)):
-            return Var.objects.filter(group=groupname)
-        else:
-            return False
+        group = get_group(group_name)
+        var = Var.objects.create(key=key, value=value, group=group)
+        var.save()
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exists')
+    except IntegrityError:
+        raise Exception('var already exists')
+    except Exception:
+        raise Exception('internal error occurred')
+
+
+def remove_var_from_group(key, group_name):
+    try:
+        group = get_group(group_name)
+        var = Var.objects.get(key=key, group=group)
+        var.delete()
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exists')
+    except Exception:
+        raise Exception('internal error occurred')
+
+# TODO: edit
+def get_group_vars(group_name):
+    try:
+        group = get_group(group_name)
     except:
         raise ("internal error occurred")
-"""
+
+
 # Roles
+def get_role(role_name):
+    try:
+        role = Role.objects.get(name=role_name)
+        return role
+    except ObjectDoesNotExist:
+        raise Exception('role doesnt exist')
+    except:
+        raise Exception('internal error occurred')
 
 
 def get_roles():
@@ -307,7 +361,7 @@ def generate_playbook(group_name):
     try:
         group = get_group(group_name)
         roles = get_group_roles(group_name)
-        context = {"hosts": group.name, "roles": roles }
+        context = {"hosts": group.name, "roles": roles}
         playbook_text = render_to_string(INVENTORY_TEMPLATE_PATH, context)
         return playbook_text
     except Exception as e:

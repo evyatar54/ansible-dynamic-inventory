@@ -34,16 +34,17 @@ class Group(models.Model):
         return string_builder
 
 
-# class Var(models.Model):
-#     group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
-#     key = models.CharField(max_length=255)
-#     value = models.CharField(max_length=255)
-#
-#     class Meta:
-#         unique_together = ("group", "key")
-#
-#     def __str__(self):
-#         return '{} : {}, group: {}'.format(self.key, self.value+'-sudoers')
+class Var(models.Model):
+    group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
+    key = models.CharField(max_length=255)
+    value = models.CharField(max_length=255)
+
+    class Meta:
+        unique_together = ("group", "key")
+
+    def __str__(self):
+        # TODO: edit
+        return '{} : {}'.format(self.key, self.value)
 
 
 class Host(models.Model):
