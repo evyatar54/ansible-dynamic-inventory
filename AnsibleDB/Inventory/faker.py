@@ -1,7 +1,7 @@
 import os
 import django
 import random
-from Inventory.models import Group, Host, Role
+from Inventory.models import Group, Host, Role, Var
 from faker import Faker
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE','AnsibleDB.settings')
@@ -11,6 +11,7 @@ hosts = ['aaa-aaa', 'bbb-aaa', '12-abc', 'lll-877', 'lnx-dev-ansb', 'blalbalba-h
 platform = ['docker', 'bamboo', 'java', 'python', 'swarm', 'ansible']
 groups = ['galaxy', 'ory', 'other', 'linux', 'paamon', 'omega']
 roles = ['ntp', 'dns', 'sudoers', 'password', 'common_rpms', 'yum_repo']
+keys = ['file', 'gateway', 'dns-server', 'ntp-server']
 
 
 def add_host():
@@ -42,12 +43,13 @@ def add_role():
     return r
 
 
-# def add_vars():
-#     g = add_group()
-#     v = Var.objects.get_or_create(group=g, key='sudoers-file')[0]
-#     v.value = str(v.group)
-#     v.save()
-#     return v
+def add_var():
+    g = add_group()
+    key = random.choice(keys)
+    value = key+'-'+g.name
+    v = Var.objects.get_or_create(key=key, value=value, group=g)[0]
+    v.save()
+    return v
 
 
 def populate(n=5):
@@ -55,8 +57,4 @@ def populate(n=5):
         add_host()
         add_group()
         add_role()
-        # add_vars()
-
-
-def get():
-    print(Group.objects.all())
+        add_var()

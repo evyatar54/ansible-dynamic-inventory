@@ -2,8 +2,6 @@
 from __future__ import unicode_literals
 from django.db import models
 
-from datetime import datetime
-
 
 class Role(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -22,7 +20,6 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
-        # return self.name
 
     def get_string(self):
         if self.groups.count() == 0:
@@ -43,7 +40,6 @@ class Var(models.Model):
         unique_together = ("group", "key")
 
     def __str__(self):
-        # TODO: edit
         return '{} : {}'.format(self.key, self.value)
 
 

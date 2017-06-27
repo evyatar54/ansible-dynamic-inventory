@@ -232,12 +232,15 @@ def remove_var_from_group(key, group_name):
     except Exception:
         raise Exception('internal error occurred')
 
-# TODO: edit
+
 def get_group_vars(group_name):
     try:
         group = get_group(group_name)
+        return group.var_set.all()
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
     except:
-        raise ("internal error occurred")
+        raise Exception('internal error occurred')
 
 
 # Roles
@@ -341,15 +344,15 @@ def remove_role_from_group(role_name, group_name):
 
 def get_inventory_json():
     try:
-        inventory_json = {}
+        inventory_json = dict()
         groups = get_all_groups()
         for group in groups:
             group_name = group.name
-            group_json = {}
+            group_json = dict()
             group_json["hosts"] = get_group_hosts(group_name)
             group_json["children"] = get_group_children(group_name)
 
-            vars_json = {}
+            vars_json = dict()
             for var in get_group_vars(group_name):
                 vars_json[var.key] = var.value
             group_json["vars"] = vars_json
