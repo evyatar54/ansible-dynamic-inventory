@@ -6,8 +6,7 @@ from datetime import datetime
 
 
 class Role(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    name = models.CharField(max_length=255, unique=True, primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
     enabled = models.BooleanField(default=True)
 
     def __str__(self):
@@ -15,7 +14,7 @@ class Role(models.Model):
 
 
 class Group(models.Model):
-    name = models.CharField(max_length=255, unique=True, primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
     groups = models.ManyToManyField('self', symmetrical=False, blank=True)
     roles = models.ManyToManyField(Role, blank=True)
     isPlatform = models.BooleanField(default=False)
@@ -48,7 +47,7 @@ class Group(models.Model):
 
 
 class Host(models.Model):
-    name = models.CharField(max_length=255, unique=True, primary_key=True)
+    name = models.CharField(max_length=255, unique=True)
     groups = models.ManyToManyField(Group)
     roles = models.ManyToManyField(Role, blank=True)
 
