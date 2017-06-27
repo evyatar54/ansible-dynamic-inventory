@@ -108,19 +108,19 @@ def create_group(request):
         groupname = request.POST['name']
         utils.create_group(groupname)
         response = Response(success="True", message="group '%s' created successfully" % groupname, data={})
-    except KeyError as e:
+    except KeyError:
         response = Response(success="False", message="missing argument: 'name'", data={})
     except Exception as e:
         response = Response(success="False", message=e.__str__(), data={})
     return JsonResponse(response)
 
 @require_http_methods(["POST"])
-def deleteGroup(request):
+def delete_group(request):
     try:
         groupname = request.POST['name']
-        all_groups = utils.deleteGroup(groupname)
+        all_groups = utils.delete_group(groupname)
         response = Response(success="True", message="group '%s' deleted successfully" % groupname, data={})
-    except KeyError as e:
+    except KeyError:
         response = Response(success="False", message="missing argument: 'name'", data={})
     except Exception as e:
         response = Response(success="False", message=e.__str__(), data={})
