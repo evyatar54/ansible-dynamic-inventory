@@ -13,29 +13,37 @@ class RemoveRoleException(Exception):
 
 
 # Host
+def get_host(hostname):
+    try:
+        host = Host.objects.get(name=hostname)
+        return host
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception('internal error occurred')
+
+
 def get_all_hosts():
     try:
-        return models.Host.objects.all()
+        return Host.objects.all()
+
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 def create_host(hostname, group_name):
     try:
-        group = Group.objects.get(name=group_name)
-        if Host.objects.get(name=hostname):
-            raise "Host already exists "
-        else:
-            host = Host.objects.create(name=hostname)
-            host.groups.add(group)
-            host.save()
-            return True
+        group = get_group(group_name)
+        host = Host.objects.create(name=hostname)
+        host.save()
+        host.groups.add(group)
+        host.save()
+        return True
 
     except ObjectDoesNotExist:
-        raise "Group doesn't exist"
-    except Exception as e:
-        # raise "internal error occurred"
-        raise e.args
+        raise Exception('Group doesnt exist')
+    except:
+        raise Exception('internal error occurred')
 
 
 def delete_host(hostname):
@@ -43,50 +51,50 @@ def delete_host(hostname):
         Host.objects.remove(name=hostname)
         return True
     except ObjectDoesNotExist:
-        raise "Host doesn't exist"
+        raise Exception('Host doesnt exist')
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 def remove_host_from_group(hostname, group_name):
     try:
-        host = Host.objects.get(name=hostname)
+        host = get_host(hostname)
         num_of_groups = host.groups.count()
         if num_of_groups < 2:
-            raise "Host cannot be left without groups"
+            raise Exception('Host cannot be left without groups')
         else:
             host.groups.remove(name=group_name)
             return True
 
     except ObjectDoesNotExist:
-        raise "Host or group doesn't exist"
+        raise Exception('Host or group doesnt exist')
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 def add_host_to_group(hostname, group_name):
     try:
-        host = Host.objects.get(name=hostname)
-        group = Group.objects.get(name=group_name)
+        host = get_host(hostname)
+        group = get_group(group_name)
         host.groups.add(group)
         return True
     except ObjectDoesNotExist:
-        raise "Host or group doesn't exist"
-    except IntegrityError :
-        raise "Host already in this group"
+        raise Exception('Host or group doesnt exist')
+    except IntegrityError:
+        raise Exception('Host already in this group')
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
-def get_all_hosts_by_group(group_name):
+def get_group_hosts(group_name):
     try:
-        group = Group.objects.get(name=group_name)
+        group = get_group(group_name)
         return group.host_set.all()
 
     except ObjectDoesNotExist:
-        raise "Group doesn't exist"
+        raise Exception('Group doesnt exist')
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 # Group
@@ -94,33 +102,34 @@ def get_all_groups():
     try:
         return Group.objects.Filter(enabled=True)
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 def get_all_platforms():
     try:
         return Group.objects.Filter(enabled=True, isPlatform=True)
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 def create_group(group_name):
     try:
         group = Group.objects.create(name=group_name)
-        group.add(group)
         group.save()
-
     except IntegrityError:
-            raise "Group already exists"
+            raise Exception('Group already exists')
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
 
 
 def delete_group(group_name):
-    Group.objects.remove(name=group_name)
-    # TODO
-    # adding removing the group from other groups/from hosts
-    # and checking if the hosts still have at least one group
+    try:
+        group = get_group(group_name)
+        group.delete()
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception('internal error occurred')
 
 
 """def removeGroupFromGroup(group_name):
@@ -156,11 +165,24 @@ def getAllOSs():
 """
 
 
-def get_all_groups_by_group(group_name):
+def get_group(group_name):
     try:
-        return Group.objects.get(name=group_name).groups
+        group = Group.objects.get(name=group_name)
+        return group
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
     except:
-        raise "internal error occurred"
+        raise Exception("internal error occurred")
+
+
+def get_group_children(group_name):
+    try:
+        group = get_group(group_name)
+        return group.children.all()
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception('internal error occurred')
 """
 # Vars
 def get_all_vars_by_group(groupname):
@@ -175,36 +197,42 @@ def get_all_vars_by_group(groupname):
 # Roles
 
 
-def get_all_roles():
+def get_roles():
     try:
-        return Role.objects.Filter(enabled=True)
+        return Role.objects.all()
     except:
-        raise "internal error occurred"
+        raise Exception('internal error occurred')
+
+
+def get_group_roles(group_name):
+    try:
+        group = get_group(group_name)
+        return group.roles.all()
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception('internal error occurred')
 
 
 def create_role(role_name):
     try:
         Role.objects.create(name=role_name, enabled=True)
         return True
-    except ObjectDoesNotExist:
-        raise "Role already exists"
+    except IntegrityError:
+        raise Exception("Role already exists")
     except:
-        raise "internal error occurred"
+        raise Exception("internal error occurred")
 
 
 def delete_role(role_name):
-    # TODO: - removing the option for roles per host
     try:
         role = Role.object.get(name=role_name)
         role.delete()
         return True
-
     except ObjectDoesNotExist:
-        raise "Role doesn't exist"
-    except RemoveRoleException as e:
-        raise e
+        raise Exception("Role doesn't exist")
     except:
-        raise "internal error occurred"
+        raise Exception("internal error occurred")
 
 
 def add_role_to_host(role_name, hostname):
@@ -215,11 +243,11 @@ def add_role_to_host(role_name, hostname):
         host.save()
         return True
     except ObjectDoesNotExist:
-        raise "Host or role doesn't exist"
+        raise Exception("Host or role doesn't exist")
     except IntegrityError:
-        raise "Role already in this host"
+        raise Exception("Role already in this host")
     except:
-        raise "internal error occurred"
+        raise Exception("internal error occurred")
 
 
 def add_role_to_group(role_name, group_name):
@@ -230,11 +258,11 @@ def add_role_to_group(role_name, group_name):
         group.save()
         return True
     except ObjectDoesNotExist:
-        raise "Group or role doesn't exist"
+        raise Exception("Group or role doesn't exist")
     except IntegrityError:
-        raise "Role already in this group"
+        raise Exception("Role already in this group")
     except:
-        raise "internal error occurred"
+        raise Exception("internal error occurred")
 
 
 def remove_role_from_host(role_name, hostname):
@@ -244,7 +272,7 @@ def remove_role_from_host(role_name, hostname):
         host.roles.remove(role)
         return True
     except ObjectDoesNotExist:
-        raise "host or role doesnt exist"
+        raise Exception("host or role doesnt exist")
 
 
 def remove_role_from_group(role_name, group_name):
@@ -254,4 +282,4 @@ def remove_role_from_group(role_name, group_name):
         group.roles.remove(role)
         return True
     except ObjectDoesNotExist:
-        raise "group or role doesnt exist"
+        raise Exception("group or role doesnt exist")

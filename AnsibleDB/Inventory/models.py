@@ -15,13 +15,13 @@ class Role(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    groups = models.ManyToManyField('self', symmetrical=False, blank=True)
+    children = models.ManyToManyField('self', symmetrical=False, blank=True, related_name='parents')
     roles = models.ManyToManyField(Role, blank=True)
     isPlatform = models.BooleanField(default=False)
     enabled = models.BooleanField(default=True)
 
     def __str__(self):
-        return '{} {}'.format(self.name, self.get_string())
+        return self.name
         # return self.name
 
     def get_string(self):
