@@ -346,10 +346,14 @@ def get_inventory_json():
         for group in groups:
             group_name = group.name
             group_json = {}
-            group_hosts = get_group_hosts(group_name)
-            group_json["hosts"] = group_hosts
-            group_children = get_group_children(group_name)
-            group_json["children"] = group_children
+            group_json["hosts"] = get_group_hosts(group_name)
+            group_json["children"] = get_group_children(group_name)
+
+            vars_json = {}
+            for var in get_group_vars(group_name):
+                vars_json[var.key] = var.value
+            group_json["vars"] = vars_json
+
             inventory_json[group_name] = group_json
 
         return inventory_json
