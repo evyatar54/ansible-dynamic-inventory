@@ -1,11 +1,10 @@
 from .models import Group, Host, Role
-from . import models
 from django.core.exceptions import ObjectDoesNotExist
 from logging import getLogger
 from django.db import IntegrityError
 from django.template.loader import render_to_string
 
-
+INVENTORY_TEMPLATE_PATH = "inventory/inventory.j2"
 logger = getLogger()
 
 
@@ -304,7 +303,6 @@ def get_inventory_json():
         raise e
 
 
-INVENTORY_TEMPLATE_PATH = "inventory/inventory.j2"
 def generate_playbook(group_name):
     try:
         group = get_group(group_name)
