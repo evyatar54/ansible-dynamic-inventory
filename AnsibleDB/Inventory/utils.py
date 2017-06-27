@@ -3,6 +3,7 @@ from . import models
 from django.core.exceptions import ObjectDoesNotExist
 from logging import getLogger
 from django.db import IntegrityError
+from django.template.loader import render_to_string
 
 
 logger = getLogger()
@@ -255,3 +256,41 @@ def remove_role_from_group(role_name, group_name):
         return True
     except ObjectDoesNotExist:
         raise "group or role doesnt exist"
+
+
+def get_inventory_json():
+    try:
+        inventory_json = {}
+        groups = get_all_groups()
+        for group in groups:
+            group_name = group.name
+            group_json = {}
+            group_hosts = get_group_hosts(group_name)
+            group_json["hosts"] = group_hosts
+            group_children = get_group_children(group_name)
+            group_json["children"] = group_children
+            inventory_json[group_name] = group_json
+
+        return inventory_json
+    except Exception as e:
+        raise e
+
+
+INVENTORY_TEMPLATE_PATH = "inventory/inventory.j2"
+def generate_playbook(group_name):
+    try:
+        group = get_group(group_name)
+        roles = get_group_roles(group_name)
+        context = {"hosts": group.name, "roles": roles }
+        playbook_text = render_to_string(INVENTORY_TEMPLATE_PATH, context)
+        return playbook_text
+    except Exception as e:
+        raise e
+
+
+
+
+
+
+
+

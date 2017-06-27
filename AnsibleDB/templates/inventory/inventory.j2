@@ -1,0 +1,5 @@
+---
+ - hosts: {{hosts}}
+   roles:
+   {% for role in roles %}  - {{role}}
+   {% endfor %}
