@@ -63,6 +63,7 @@ def add_host_to_group(request):
     return JsonResponse(response)
 
 
+@require_http_methods(["POST"])
 def remove_host_from_group(request):
     try:
         host_name = request.GET['hostname']

@@ -135,36 +135,7 @@ def delete_group(group_name):
         raise Exception('internal error occurred')
 
 
-"""def removeGroupFromGroup(group_name):
-        group = Group.objects.get(name=hostname)
-
-    #    host.remove(groups=group_name)
-    ## checking if the host has more group left , there's no such thing as host without groups
-
-def addGroupToGroup(hostname, group_name):
-        host = Host.objects.get_or_create(name=hostname)
-        group = Group.objects.get(name=group_name)
-        host.groups.add(group_name)
-
-
-
-    >> > entry = Entry.objects.get(pk=1)
-    >> > cheese_blog = Blog.objects.get(name="Cheddar Talk")
-    >> > entry.blog = cheese_blog
-    >> > entry.save()
-
-    >> > from blog.models import Author
-    >> > joe = Author.objects.create(name="Joe")
-    >> > entry.authors.add(joe)
-
-
-# OSs
-def getAllOSs():
-    return (OS.objects.all())
-"""
-
-
-def add_group_to_group(group_name, child_group_name):
+def add_group_child(group_name, child_group_name):
     try:
         group = get_group(group_name)
         group_child = get_group(child_group_name)
