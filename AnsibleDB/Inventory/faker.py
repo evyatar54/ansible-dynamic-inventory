@@ -20,6 +20,16 @@ def add_host():
     return h
 
 
+def add_host_to_group():
+    h = Host.objects.get_or_create(name=random.choice(hosts))[0]
+    h.save()
+    g = Group.objects.get_or_create(name=random.choice(platform),
+                                    isPlatform=True)[0]
+    g.save()
+    h.groups.add(g)
+    h.save()
+
+
 def add_platform():
     g = Group.objects.get_or_create(name=random.choice(platform),
                                     isPlatform=True)[0]
@@ -32,7 +42,7 @@ def add_group():
     p = add_platform()
     r = add_role()
     g.roles.add(r)
-    g.groups.add(p)
+    g.children.add(p)
     g.save()
     return g
 
@@ -58,3 +68,9 @@ def populate(n=5):
         add_group()
         add_role()
         add_var()
+
+
+def add_hosts(n=20):
+    for i in range(n):
+        add_host_to_group()
+
