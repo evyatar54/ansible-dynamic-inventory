@@ -157,3 +157,82 @@ def get_playbook(request):
         response = Response(success="False", message=e.__str__(), data={})
 
     return JsonResponse(response._asdict())
+
+
+@require_http_methods(["GET"])
+def get_host(request):
+    try:
+        hostname = request.GET['hostname']
+        host = utils.get_host(hostname)
+        response = Response(success="True",
+                            message="host % exists" % host.name,
+                            data=host.name)
+    except KeyError:
+        response = Response(success="False", message="missing argument: 'hostname'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
+    return JsonResponse(response.__asdict())
+
+
+@require_http_methods(["GET"])
+def get_group(request):
+    try:
+        group_name = request.GET['groupname']
+        group = utils.get_group(group_name)
+        response = Response(success="True",
+                            message="group % exists" % group.name,
+                            data=group.name)
+    except KeyError:
+        response = Response(success="False", message="missing argument: 'groupname'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
+    return JsonResponse(response.__asdict())
+
+
+@require_http_methods(["GET"])
+def get_role(request):
+    try:
+        role_name = request.GET['rolename']
+        role = utils.get_role(role_name)
+        response = Response(success="True",
+                            message="role % exists" % role.name,
+                            data=role.name)
+    except KeyError:
+        response = Response(success="False", message="missing argument: 'rolename'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
+    return JsonResponse(response.__asdict())
+
+
+@require_http_methods(["GET"])
+def remove_role_from_group(request):
+    try:
+        role_name = request.GET['rolename']
+        group_name = request.GET['groupname']
+        utils.remove_role_from_group(role_name, group_name)
+        response = Response(success="True",
+                            message="{} has been successfully removed from group {}".format(role_name, group_name), data={})
+    except KeyError:
+        response = Response(success="False",
+                            message="rolename and groupname required in HTTP request", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.args, data={})
+
+    return JsonResponse(response)
+
+
+@require_http_methods(["GET"])
+def remove_child_from_group(request):
+    try:
+        child_name = request.GET['childname']
+        group_name = request.GET['groupname']
+        utils.remove_group_child(group_name, child_name)
+        response = Response(success="True",
+                            message="{} has been successfully removed from group {}".format(child_name, group_name), data={})
+    except KeyError:
+        response = Response(success="False",
+                            message="childname and groupname required in HTTP request", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.args, data={})
+
+    return JsonResponse(response)
