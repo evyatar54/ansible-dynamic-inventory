@@ -103,14 +103,14 @@ def get_group_hosts(group_name):
 # Group
 def get_all_groups():
     try:
-        return Group.objects.Filter(enabled=True)
+        return Group.objects.filter(enabled=True)
     except:
         raise Exception('internal error occurred')
 
 
 def get_all_platforms():
     try:
-        return Group.objects.Filter(enabled=True, isPlatform=True)
+        return Group.objects.filter(enabled=True, isPlatform=True)
     except:
         raise Exception('internal error occurred')
 
@@ -349,8 +349,8 @@ def get_inventory_json():
         for group in groups:
             group_name = group.name
             group_json = dict()
-            group_json["hosts"] = get_group_hosts(group_name)
-            group_json["children"] = get_group_children(group_name)
+            group_json["hosts"] = [host.name for host in get_group_hosts(group_name)]
+            group_json["children"] = [group.name for group in get_group_children(group_name)]
 
             vars_json = dict()
             for var in get_group_vars(group_name):
