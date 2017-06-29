@@ -32,7 +32,7 @@ class Group(models.Model):
 
 
 class Var(models.Model):
-    group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE)
+    group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE, related_name='vars')
     key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
 

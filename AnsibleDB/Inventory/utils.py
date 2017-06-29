@@ -100,6 +100,75 @@ def add_host_to_group(hostname, group_name):
         raise Exception('internal error occurred')
 
 
+def get_host_roles(hostname):
+    try:
+        host = get_host(hostname)
+        group = host.groups.all()[0]
+        roles = bfs_get_group_roles(group)
+        return roles
+    except ObjectDoesNotExist:
+        raise Exception('host doesnt exist')
+    except:
+        raise Exception('internal error occurred')
+
+
+def get_host_vars(hostname):
+    try:
+        host = get_host(hostname)
+        group = host.groups.all()[0]
+        variables = bfs_get_group_vars(group)
+        return variables
+    except ObjectDoesNotExist:
+        raise Exception('host doesnt exist')
+    except:
+        raise Exception('internal error occurred')
+
+
+def bfs_get_group_roles(group):
+    explored = []
+    # keep track of nodes to be checked
+    queue = [group]
+    group_roles = []
+
+    # keep looping until there are nodes still to be checked
+    while queue:
+        # pop shallowest node (first node) from queue
+        node = queue.pop(0)
+        if node not in explored:
+            # add node to list of checked nodes
+            group_roles += node.roles.all()
+            explored.append(node)
+            neighbours = group.children.all().append(group.parents)
+
+            # add neighbours of node to queue
+            for neighbour in neighbours:
+                queue.append(neighbour)
+    return explored
+
+
+def bfs_get_group_vars(group):
+    explored = []
+    # keep track of nodes to be checked
+    queue = [group]
+    group_vars = []
+
+    # keep looping until there are nodes still to be checked
+    while queue:
+        # pop shallowest node (first node) from queue
+        node = queue.pop(0)
+        if node not in explored:
+            # add node to list of checked nodes
+            group_vars += node.vars.all()
+            explored.append(node)
+            neighbours = group.children.all().append(group.parents)
+
+            # add neighbours of node to queue
+            for neighbour in neighbours:
+                queue.append(neighbour)
+    return explored
+
+
+# Group
 def get_group_hosts(group_name):
     try:
         group = get_group(group_name)
@@ -111,7 +180,6 @@ def get_group_hosts(group_name):
         raise Exception('internal error occurred')
 
 
-# Group
 def get_all_groups():
     try:
         return Group.objects.filter(enabled=True)
