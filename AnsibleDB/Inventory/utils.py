@@ -19,6 +19,17 @@ def get_host(hostname):
         raise Exception('internal error occurred')
 
 
+def get_host_groups(hostname):
+    try:
+        host = Host.objects.get(name=hostname)
+        groups = host.groups.all()
+        return groups
+    except ObjectDoesNotExist:
+        raise Exception('host doesnt exist')
+    except:
+        raise Exception('internal error occurred')
+
+
 def get_all_hosts():
     try:
         return Host.objects.all()
