@@ -196,6 +196,20 @@ def add_group_child(request):
 
 
 @require_http_methods(["POST"])
+def add_group_to_parent(request):
+    try:
+        group_name = request.POST["groupname"]
+        parent_name = request.POST["parentname"]
+        utils.add_group_to_parent(group_name, parent_name)
+        response = Response(success="True", message="Successfuly added group to parent", data={})
+    except KeyError:
+        response = Response(success="False", message="expected arguments: 'groupname' 'parentname'", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.__str__(), data={})
+    return JsonResponse(response._asdict())
+
+
+@require_http_methods(["POST"])
 def add_role_to_group(request):
     try:
         group_name = request.POST["groupname"]
@@ -298,6 +312,24 @@ def remove_child_from_group(request):
     except KeyError:
         response = Response(success="False",
                             message="childname and groupname required in HTTP request", data={})
+    except Exception as e:
+        response = Response(success="False", message=e.args, data={})
+
+    return JsonResponse(response)
+
+
+@require_http_methods(["GET"])
+def remove_group_from_parent(request):
+    try:
+        parent_name = request.GET['parentname']
+        group_name = request.GET['groupname']
+        utils.remove_group_from_parent(group_name, parent_name)
+        response = Response(success="True",
+                            message="{} has been successfully removed from group {}".
+                            format(group_name, parent_name), data={})
+    except KeyError:
+        response = Response(success="False",
+                            message="parentname and groupname required in HTTP request", data={})
     except Exception as e:
         response = Response(success="False", message=e.args, data={})
 

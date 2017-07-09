@@ -226,11 +226,35 @@ def add_group_child(group_name, child_group_name):
         raise Exception("internal error occurred")
 
 
+def add_group_to_parent(group_name, parent_group_name):
+    try:
+        group = get_group(group_name)
+        group_parent = get_group(parent_group_name)
+        group.parents.add(group_parent)
+        return True
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception("internal error occurred")
+
+
 def remove_group_child(group_name, child_group_name):
     try:
         group = get_group(group_name)
         group_child = get_group(child_group_name)
         group.children.remove(group_child)
+        return True
+    except ObjectDoesNotExist:
+        raise Exception('group doesnt exist')
+    except:
+        raise Exception("internal error occurred")
+
+
+def remove_group_from_parent(group_name, parent_group_name):
+    try:
+        group = get_group(group_name)
+        group_parent = get_group(parent_group_name)
+        group.parents.remove(group_parent)
         return True
     except ObjectDoesNotExist:
         raise Exception('group doesnt exist')
@@ -423,4 +447,3 @@ def generate_playbook(group_name):
         return playbook_text
     except Exception as e:
         raise e
-
