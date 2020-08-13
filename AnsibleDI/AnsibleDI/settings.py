@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from . import environment as env
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -73,14 +74,13 @@ LOGGING = {
     'disable_existing_loggers': False,
     'handlers': {
         'console': {
-            'level': 'INFO',
             'class': 'logging.StreamHandler'
         },
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': env.LOGGER["level"],
             'propagate': True,
         },
     },
@@ -97,11 +97,11 @@ from .environment import DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME'      : DB["name"],
-        'USER'      : DB["username"],
-        'PASSWORD'  : DB["password"],
         'HOST'      : DB["host"],
         'PORT'      : DB["port"],
+        'NAME'      : env.DB["name"],
+        'USER'      : DB["username"],
+        'PASSWORD'  : DB["password"],        
     }
 }
 
