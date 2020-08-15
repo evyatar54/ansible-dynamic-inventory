@@ -45,7 +45,7 @@ class Var(models.Model):
 
 class Host(models.Model):
     name = models.CharField(max_length=255, unique=True)
-    groups = models.ManyToManyField(Group)
+    groups = models.ManyToManyField(Group, related_name="hosts")
     roles = models.ManyToManyField(Role, blank=True)
 
     def __str__(self):

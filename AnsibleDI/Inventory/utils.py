@@ -31,10 +31,7 @@ def get_host_groups(hostname):
 
 
 def get_all_hosts():
-    try:
-        return Host.objects.all()
-    except:
-        raise Exception('internal error occurred')
+    return Host.objects.all()
 
 
 def get_host_roles(hostname):
@@ -52,7 +49,7 @@ def create_host(hostname, group_name):
         host.save()
         host.groups.add(group)
         host.save()
-        return True
+        return host
 
     except ObjectDoesNotExist:
         raise Exception('Group doesnt exist')
@@ -186,6 +183,9 @@ def get_all_groups():
     except:
         raise Exception('internal error occurred')
 
+def get_hosts_by_group(group_name):
+    group = Group.objects.get(name=group_name)
+    return group.hosts
 
 def get_all_platforms():
     try:
@@ -329,10 +329,7 @@ def get_role(role_name):
 
 
 def get_roles():
-    try:
-        return Role.objects.all()
-    except:
-        raise Exception('internal error occurred')
+    return Role.objects.all()
 
 
 def get_group_roles(group_name):

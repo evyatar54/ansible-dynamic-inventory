@@ -84,7 +84,7 @@ def remove_host_from_group(request):
 def get_all_hosts_by_group(request):
     try:
         group_name = request.GET['name']
-        all_group_hosts = utils.get_all_hosts_by_group(group_name)
+        all_group_hosts = utils.get_hosts_by_group(group_name)
         response = Response(success="True",
                             message="got all '%s' group's successfully" % group_name,
                             data=all_group_hosts)
