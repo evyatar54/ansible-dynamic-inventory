@@ -21,4 +21,4 @@ class Query(graphene.ObjectType):
         return inventoryUtils.get_all_groups()
 
     def resolve_roles(root, info):
-        return inventoryUtils.get_roles()
+        return inventoryUtils.get_all_roles()
