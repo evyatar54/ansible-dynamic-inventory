@@ -9,7 +9,7 @@ class HostType(DjangoObjectType):
 class GroupType(DjangoObjectType):
     class Meta:
         model = Group
-        fields = ("id", "name", "children", "roles", "vars", "isPlatform", "enabled")
+        fields = ("id", "name", "hosts", "children", "roles", "vars", "isPlatform", "enabled")
 
 class RoleType(DjangoObjectType):
     class Meta:
