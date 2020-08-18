@@ -1,20 +1,20 @@
 
 
-from django.conf.urls import url, include
+from django.conf.urls import re_path, include
 from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    url(r'^host/create/$', views.create_host),
-    url(r'^host/delete/$', views.delete_host),
-    url(r'^host/add_to_group/$', views.add_host_to_group),
-    url(r'^host/remove_from_group/$', views.remove_host_from_group),
-    url(r'^group/get_hosts/$', views.get_all_hosts_by_group),
-    url(r'^group/get_all/$', views.get_all_groups),
-    url(r'^group/create/$', views.create_group),
-    url(r'^group/delete/$', views.delete_group),
-    url(r'^generate_playbook/$', views.get_playbook),
-    url(r'^$', views.inventory),
+    re_path(r'^host/create/$', views.create_host),
+    re_path(r'^host/delete/$', views.delete_host),
+    re_path(r'^host/add_to_group/$', views.add_host_to_group),
+    re_path(r'^host/remove_from_group/$', views.remove_host_from_group),
+    re_path(r'^group/get_hosts/$', views.get_all_hosts_by_group),
+    re_path(r'^group/get_all/$', views.get_all_groups),
+    re_path(r'^group/create/$', views.create_group),
+    re_path(r'^group/delete/$', views.delete_group),
+    re_path(r'^generate_playbook/$', views.get_playbook),
+    re_path(r'^$', views.inventory),
 ]
 
 
