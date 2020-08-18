@@ -4,7 +4,6 @@ from Inventory import utils as inventoryUtils
 
 class Query(graphene.ObjectType):
     hosts = graphene.List(HostType)
-    get_hosts_by_group = graphene.List(HostType, name=graphene.String(required=True))
 
     groups = graphene.List(GroupType)
 
@@ -13,9 +12,6 @@ class Query(graphene.ObjectType):
 
     def resolve_hosts(root, info):
         return inventoryUtils.get_all_hosts()
-
-    def resolve_get_hosts_by_group(root, info, name):
-        return inventoryUtils.get_hosts_by_group(name)
 
     def resolve_groups(root, info):
         return inventoryUtils.get_all_groups()

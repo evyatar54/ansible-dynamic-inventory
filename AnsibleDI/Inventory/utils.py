@@ -52,10 +52,6 @@ def get_group_hosts(group_name):
 def get_all_groups():
     return Group.objects.filter(enabled=True)
 
-def get_hosts_by_group(group_name):
-    group = Group.objects.get(name=group_name)
-    return group.hosts.all()
-
 def create_group(
         group_name,
         children=[], 
