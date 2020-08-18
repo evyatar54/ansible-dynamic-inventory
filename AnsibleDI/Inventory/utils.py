@@ -126,7 +126,7 @@ def bfs_get_group_vars(group):
 # Group
 def get_group_hosts(group_name):
     group = get_group(group_name)
-    return group.host_set.all()
+    return group.hosts.all()
 
 def get_all_groups():
     return Group.objects.filter(enabled=True)
@@ -136,10 +136,7 @@ def get_hosts_by_group(group_name):
     return group.hosts.all()
 
 def get_all_platforms():
-    try:
-        return Group.objects.filter(enabled=True, isPlatform=True)
-    except:
-        raise Exception('internal error occurred')
+    return Group.objects.filter(enabled=True, isPlatform=True)
 
 
 def create_group(
@@ -177,119 +174,59 @@ def set_group_vars(group, vars):
         var.save()
 
 def delete_group(group_name):
-    try:
-        group = get_group(group_name)
-        group.delete()
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception('internal error occurred')
-
+    group = get_group(group_name)
+    group.delete()
 
 def add_group_child(group_name, child_group_name):
-    try:
-        group = get_group(group_name)
-        group_child = get_group(child_group_name)
-        group.children.add(group_child)
-        return True
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception("internal error occurred")
+    group = get_group(group_name)
+    group_child = get_group(child_group_name)
+    group.children.add(group_child)
+    return True
 
 
 def add_group_to_parent(group_name, parent_group_name):
-    try:
-        group = get_group(group_name)
-        group_parent = get_group(parent_group_name)
-        group.parents.add(group_parent)
-        return True
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception("internal error occurred")
-
+    group = get_group(group_name)
+    group_parent = get_group(parent_group_name)
+    group.parents.add(group_parent)
+    return True
 
 def remove_group_child(group_name, child_group_name):
-    try:
-        group = get_group(group_name)
-        group_child = get_group(child_group_name)
-        group.children.remove(group_child)
-        return True
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception("internal error occurred")
-
+    group = get_group(group_name)
+    group_child = get_group(child_group_name)
+    group.children.remove(group_child)
+    return True
 
 def remove_group_from_parent(group_name, parent_group_name):
-    try:
-        group = get_group(group_name)
-        group_parent = get_group(parent_group_name)
-        group.parents.remove(group_parent)
-        return True
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception("internal error occurred")
-
+    group = get_group(group_name)
+    group_parent = get_group(parent_group_name)
+    group.parents.remove(group_parent)
+    return True
 
 def get_group(group_name):
-    try:
-        group = Group.objects.get(name=group_name)
-        return group
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception("internal error occurred")
+    group = Group.objects.get(name=group_name)
+    return group
 
 def get_groups(groups):
     return Group.objects.filter(name__in=groups)
 
 def get_group_children(group_name):
-    try:
-        group = get_group(group_name)
-        return group.children.all()
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception('internal error occurred')
-
+    group = get_group(group_name)
+    return group.children.all()
 
 # Vars
 def add_var_to_group(key, value, group_name):
-    try:
-        group = get_group(group_name)
-        var = Var.objects.create(key=key, value=value, group=group)
-        var.save()
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exists')
-    except IntegrityError:
-        raise Exception('var already exists')
-    except Exception:
-        raise Exception('internal error occurred')
-
+    group = get_group(group_name)
+    var = Var.objects.create(key=key, value=value, group=group)
+    var.save()
 
 def remove_var_from_group(key, group_name):
-    try:
-        group = get_group(group_name)
-        var = Var.objects.get(key=key, group=group)
-        var.delete()
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exists')
-    except Exception:
-        raise Exception('internal error occurred')
-
+    group = get_group(group_name)
+    var = Var.objects.get(key=key, group=group)
+    var.delete()
 
 def get_group_vars(group_name):
-    try:
-        group = get_group(group_name)
-        return group.var_set.all()
-    except ObjectDoesNotExist:
-        raise Exception('group doesnt exist')
-    except:
-        raise Exception('internal error occurred')
-
+    group = get_group(group_name)
+    return group.vars.all()
 
 # Roles
 def get_role(role_name):
