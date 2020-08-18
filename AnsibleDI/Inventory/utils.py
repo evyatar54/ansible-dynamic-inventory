@@ -21,20 +21,13 @@ def get_host_groups(hostname):
 def get_all_hosts():
     return Host.objects.all()
 
-
-def get_host_roles(hostname):
-    host = get_host(hostname)
-    return host.roles.all()
-
 def create_host(name, groups, roles):
     group_list = get_groups(groups)
     role_list = get_roles(roles)
-
     host = Host.objects.create(name=name)
     host.groups.add(*group_list)
     host.roles.add(*role_list)
     host.save()
-
     return host
 
 def delete_host(hostname):
@@ -51,78 +44,6 @@ def update_host(hostname, groups_names, roles_names):
     host.roles.add(*roles)
     return host
 
-
-def remove_host_from_group(hostname, group_name):
-    host = get_host(hostname)
-    num_of_groups = host.groups.count()
-    if num_of_groups < 2:
-        raise Exception('Host cannot be left without groups')
-    else:
-        host.groups.remove(name=group_name)
-        return True
-
-def add_host_to_group(hostname, group_name):
-    host = get_host(hostname)
-    group = get_group(group_name)
-    host.groups.add(group)
-    return True
-
-def get_host_roles(hostname):
-    host = get_host(hostname)
-    group = host.groups.all()[0]
-    roles = bfs_get_group_roles(group)
-    return roles
-
-def get_host_vars(hostname):
-    host = get_host(hostname)
-    group = host.groups.all()[0]
-    variables = bfs_get_group_vars(group)
-    return variables
-
-def bfs_get_group_roles(group):
-    explored = []
-    # keep track of nodes to be checked
-    queue = [group]
-    group_roles = []
-
-    # keep looping until there are nodes still to be checked
-    while queue:
-        # pop shallowest node (first node) from queue
-        node = queue.pop(0)
-        if node not in explored:
-            # add node to list of checked nodes
-            group_roles += node.roles.all()
-            explored.append(node)
-            neighbours = group.children.all().append(group.parents)
-
-            # add neighbours of node to queue
-            for neighbour in neighbours:
-                queue.append(neighbour)
-    return explored
-
-
-def bfs_get_group_vars(group):
-    explored = []
-    # keep track of nodes to be checked
-    queue = [group]
-    group_vars = []
-
-    # keep looping until there are nodes still to be checked
-    while queue:
-        # pop shallowest node (first node) from queue
-        node = queue.pop(0)
-        if node not in explored:
-            # add node to list of checked nodes
-            group_vars += node.vars.all()
-            explored.append(node)
-            neighbours = group.children.all().append(group.parents)
-
-            # add neighbours of node to queue
-            for neighbour in neighbours:
-                queue.append(neighbour)
-    return explored
-
-
 # Group
 def get_group_hosts(group_name):
     group = get_group(group_name)
@@ -134,10 +55,6 @@ def get_all_groups():
 def get_hosts_by_group(group_name):
     group = Group.objects.get(name=group_name)
     return group.hosts.all()
-
-def get_all_platforms():
-    return Group.objects.filter(enabled=True, isPlatform=True)
-
 
 def create_group(
         group_name,
@@ -177,31 +94,6 @@ def delete_group(group_name):
     group = get_group(group_name)
     group.delete()
 
-def add_group_child(group_name, child_group_name):
-    group = get_group(group_name)
-    group_child = get_group(child_group_name)
-    group.children.add(group_child)
-    return True
-
-
-def add_group_to_parent(group_name, parent_group_name):
-    group = get_group(group_name)
-    group_parent = get_group(parent_group_name)
-    group.parents.add(group_parent)
-    return True
-
-def remove_group_child(group_name, child_group_name):
-    group = get_group(group_name)
-    group_child = get_group(child_group_name)
-    group.children.remove(group_child)
-    return True
-
-def remove_group_from_parent(group_name, parent_group_name):
-    group = get_group(group_name)
-    group_parent = get_group(parent_group_name)
-    group.parents.remove(group_parent)
-    return True
-
 def get_group(group_name):
     group = Group.objects.get(name=group_name)
     return group
@@ -214,16 +106,6 @@ def get_group_children(group_name):
     return group.children.all()
 
 # Vars
-def add_var_to_group(key, value, group_name):
-    group = get_group(group_name)
-    var = Var.objects.create(key=key, value=value, group=group)
-    var.save()
-
-def remove_var_from_group(key, group_name):
-    group = get_group(group_name)
-    var = Var.objects.get(key=key, group=group)
-    var.delete()
-
 def get_group_vars(group_name):
     group = get_group(group_name)
     return group.vars.all()
@@ -249,32 +131,6 @@ def create_role(role_name):
 def delete_role(role_name):
     role = Role.object.get(name=role_name)
     role.delete()
-    return True
-
-def add_role_to_host(role_name, hostname):
-    host = Host.objects.get(name=hostname)
-    role = Role.object.get(name=role_name)
-    host.roles.add(role)
-    host.save()
-    return True
-
-def add_role_to_group(role_name, group_name):
-    group = Group.objects.get(name=group_name)
-    role = Role.objects.get(name=role_name)
-    group.roles.add(role)
-    group.save()
-    return True
-
-def remove_role_from_host(role_name, hostname):
-    host = Host.objects.get(name=hostname)
-    role = Role.objects.get(name=role_name)
-    host.roles.remove(role)
-    return True
-
-def remove_role_from_group(role_name, group_name):
-    group = Group.objects.get(name=group_name)
-    role = Role.objects.get(name=role_name)
-    group.roles.remove(role)
     return True
 
 def get_inventory_json():

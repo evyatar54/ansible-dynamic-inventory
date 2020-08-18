@@ -1,5 +1,4 @@
  # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from django.db import models
 
 
@@ -20,16 +19,6 @@ class Group(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_string(self):
-        if self.groups.count() == 0:
-            string_builder = ''
-        else:
-            string_builder = 'in groups:\n  '
-            for g in self.groups.all():
-                string_builder += str(g.name) + ', '
-        return string_builder
-
 
 class Var(models.Model):
     group = models.ForeignKey(Group, null=False, on_delete=models.CASCADE, related_name='vars')
