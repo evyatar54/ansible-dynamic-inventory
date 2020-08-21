@@ -1,6 +1,12 @@
 import os
 env = os.environ
 
+DEBUG = env.get("DEBUG", "False")
+if DEBUG.lower() not in ["false", "no", "n"]:
+    DEBUG = False
+else:
+    DEBUG = True
+
 DB = {
     "host": env.get("DB_HOST", "localhost"),
     "port": env.get("DB_PORT", "5432"),
