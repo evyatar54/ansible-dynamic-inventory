@@ -10,7 +10,11 @@ Make sure you have a Postgresql DB up and running.
 
 Make sure the following environment variables are defined in the container:
 
-DB_HOST, DB_PORT (default: 5432), DB_NAME, DB_USER, DB_PASS, LOG_LEVEL (default: "INFO"), DEBUG( default: "False").
+DB_HOST, DB_PORT (default: 5432), DB_NAME, DB_USER, DB_PASS.
+
+LOG_LEVEL (default: "INFO").
+
+DEBUG( default: "False").
 
 run:
 
