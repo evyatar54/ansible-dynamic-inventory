@@ -6,9 +6,9 @@
 
 `docker pull evya/ansible-dynamic-inventory:latest`
 
-Make sure you have a Postgresql DB up and running.
+#### Make sure you have a Postgresql DB up and running.
 
-Make sure the following environment variables are defined in the container:
+#### Make sure the following environment variables are defined in the container:
 
 DB_HOST, DB_PORT (default: 5432), DB_NAME, DB_USER, DB_PASS.
 
@@ -16,7 +16,7 @@ LOG_LEVEL (default: "INFO").
 
 DEBUG( default: "False").
 
-run:
+#### run:
 
 `docker run -dit -p 8000:8000 evya/ansible-dynamic-inventory:latest`
 
